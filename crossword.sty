@@ -25,32 +25,30 @@
 %
 % -- start of \begin{crossword}
 \newenvironment{crossword}[3][puzzle]{
-	% Check for out local environment commands
-	% The height of the crossword
-	\ifundef{\cwordwidth}%
-	{%
-		\newcommand{\cwordwidth}{#2}%
-	}{%
-		\PackageError{crossword}{Already in a crossword environment}%
-	}%
-	% The height of the crossword
-	\ifundef{\cwordheight}%
-	{%
-		\newcommand{\cwordheight}{#3}%
-	}{%
-		\PackageError{crossword}{Already in a crossword environment}%
-	}%
 	% Puzzle / Solution mode
 	\ifundef{\cwordmode}%
 	{
+		\renewcommand{\do}[1]{\listadd{\argslist}{##1}}
+		\docsvlist{#1}
+		\newbool{cwordsoln}
+		\ifinlist{solution}{\argslist}{\booltrue{cwordsoln}}{\boolfalse{cwordsoln}}
 	}{%
 		\PackageError{crossword}{Already in a crossword environment}%
 	}%
+	\newcommand{\cwordwidth}{#2}%
+	\newcommand{\cwordheight}{#3}%
+	% Counter for the number of the current clue
 	\newcounter{clue}%
-	\newcounter{squ}%
+	\newcounter{cwordletter}
+	% List placeolders
+	%  - The across and down clue strings
+	%  - List of x,y co-ord of squares marked as starting a clue
+	\newcommand{\rootsquares}{}%
 	\newcommand{\acrossclues}{}%
 	\newcommand{\downclues}{}%
+	% Command variable for length of current answer
 	\newcommand{\cwordlen}{}%
+	% Create a drawing box for the grid
 	\newsavebox{\cwordgrid}%
 	% Begin the grid drawing
 	\begin{lrbox}{\cwordgrid}%
@@ -67,18 +65,20 @@
 	\begin{center}
 		\resizebox{0.95\columnwidth}{!}{\usebox{\cwordgrid}}
 
-		\renewcommand{\do}[1]{##1 \\ }
+		\ifbool{cwordsoln}{}{
+			\renewcommand{\do}[1]{##1 \\ }
 
-		\begin{multicols}{2}
-			\begin{flushleft}
-			\textbf{Across} \\
-			\dolistloop{\acrossclues}
+			\begin{multicols}{2}
+				\begin{flushleft}
+				\textbf{Across} \\
+				\dolistloop{\acrossclues}
 
-			\columnbreak
-			\textbf{Down} \\
-			\dolistloop{\downclues}
-			\end{flushleft}
-		\end{multicols}
+				\columnbreak
+				\textbf{Down} \\
+				\dolistloop{\downclues}
+				\end{flushleft}
+			\end{multicols}
+		}
 	\end{center}
 }
 
@@ -89,43 +89,55 @@
 % - direction - 0 is across, 1 is down
 % - answer
 % - clue
+%
+% TODO: Throw error is not used in crossword environment
 \newcommand{\cwordclue}[5]{
-	\makeatletter
 	\StrLen{#4}[\cwordlen]
-	\addtocounter{clue}{1}%
+
+	\xifinlist{#1*\cwordwidth+#2}{\rootsquares}{
+		% Do anything here?
+	}{
+		\addtocounter{clue}{1}%
+		\listxadd{\rootsquares}{#1*\cwordwidth+#2}
+	}
 
 	\ifnumequal{#3}{0}{
 		\listxadd{\acrossclues}{\arabic{clue}. #5 (\cwordlen)}
-		\cwordwhitea{#1}{#2}{\cwordlen}
+		\cwordwhitea{#1}{#2}{\cwordlen}{#4}{\cwordlen}
 	}{
 		\listxadd{\downclues}{\arabic{clue}. #5 (\cwordlen)}
-		\cwordwhited{#1}{#2}{\cwordlen}
+		\cwordwhited{#1}{#2}{\cwordlen}{#4}
 	}
-	\draw (#1-1-0.05, \cwordheight+1-#2-0.2) node[right,font=\small] {\arabic{clue}};
-	\makeatother
+	\ifbool{cwordsoln}{}{
+		\draw (#1-1-0.05, \cwordheight+1-#2-0.2) node[right,font=\small] {\arabic{clue}};
+	}
 }
 
-\newcommand{\cwordcluestar}[5]{
-	\makeatletter
-	\StrLen{#4}[\cwordlen]
-
-	\ifnumequal{#3}{0}{
-		\listxadd{\acrossclues}{\arabic{clue}. #5 (\cwordlen)}
-		\cwordwhitea{#1}{#2}{\cwordlen}
+\newcommand{\cwordwhitea}[4]{
+	\addtocounter{cwordletter}{1}
+	\draw[fill=white] (#1-1, \cwordheight-#2) rectangle (#1, \cwordheight-#2+1);
+	\ifbool{cwordsoln}{
+		\draw (#1-1+0.5, \cwordheight-#2+0.5) node[font=\large] {\StrChar{#4}{\value{cwordletter}}};
+	}{%
+	}%
+	\ifnumequal{#3}{1}{
+		\setcounter{cwordletter}{0}
 	}{
-		\listxadd{\downclues}{\arabic{clue}. #5 (\cwordlen)}
-		\cwordwhited{#1}{#2}{\cwordlen}
+		\cwordwhitea{#1+1}{#2}{#3-1}{#4}
 	}
-	\draw (#1-1-0.05, \cwordheight+1-#2-0.2) node[right,font=\small] {\arabic{clue}};
 }
 
-\newcommand{\cwordwhitea}[3]{
+\newcommand{\cwordwhited}[4]{
+	\addtocounter{cwordletter}{1}
 	\draw[fill=white] (#1-1, \cwordheight-#2) rectangle (#1, \cwordheight-#2+1);
-	\ifnumequal{#3}{1}{\relax}{\cwordwhitea{#1+1}{#2}{#3-1}}
-}
-
-\newcommand{\cwordwhited}[3]{
-	\draw[fill=white] (#1-1, \cwordheight-#2) rectangle (#1, \cwordheight-#2+1);
-	\ifnumequal{#3}{1}{\relax}{\cwordwhited{#1}{#2-1}{#3-1}}
+	\ifbool{cwordsoln}{	
+		\draw (#1-1+0.5, \cwordheight-#2+0.5) node[font=\large] {\StrChar{#4}{\value{cwordletter}}};
+	}{%
+	}%
+	\ifnumequal{#3}{1}{
+		\setcounter{cwordletter}{0}
+	}{
+		\cwordwhited{#1}{#2-1}{#3-1}{#4}
+	}
 }
 
