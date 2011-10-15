@@ -71,9 +71,8 @@
 
 	\begin{center}
 		\resizebox{0.95\columnwidth}{!}{\usebox{\cwordgrid}}
-
-		\ifbool{cwordsoln}{}{
-			\renewcommand{\do}[1]{##1 \\ }
+		\ifbool{cwordsoln}{}{%
+			\renewcommand{\do}[1]{##1 \\ }%
 
 			\begin{multicols}{2}
 				\begin{flushleft}
@@ -85,7 +84,7 @@
 				\dolistloop{\downclues}
 				\end{flushleft}
 			\end{multicols}
-		}
+		}%
 	\end{center}
 }
 
