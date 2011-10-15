@@ -37,15 +37,11 @@
 % -- start of \begin{crossword}
 \newenvironment{crossword}[3][puzzle]{
 	% Puzzle / Solution mode
-	\ifundef{\cwordmode}%
-	{
-		\renewcommand{\do}[1]{\listadd{\argslist}{##1}}
-		\docsvlist{#1}
-		\newbool{cwordsoln}
-		\ifinlist{solution}{\argslist}{\booltrue{cwordsoln}}{\boolfalse{cwordsoln}}
-	}{%
-		\PackageError{crossword}{Already in a crossword environment}%
-	}%
+	\renewcommand{\do}[1]{\listadd{\argslist}{##1}}
+	\docsvlist{#1}
+	\newbool{cwordsoln}
+	\ifinlist{solution}{\argslist}{\booltrue{cwordsoln}}{\boolfalse{cwordsoln}}
+	%
 	\newcommand{\cwordwidth}{#2}%
 	\newcommand{\cwordheight}{#3}%
 	% Counter for the number of the current clue
