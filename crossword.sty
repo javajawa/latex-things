@@ -10,6 +10,18 @@
 \usepackage{multicol}
 \usepackage{xstring}
 
+% Counters are global, because that's how I can get it to work
+\newcounter{clue}
+\newcounter{cwordletter}
+% These three lists have to be globals, as they are written to by
+% commands of a lower scope (the \cwordclue command, to be precise)
+\newcommand{\rootsquares}{}
+\newcommand{\acrossclues}{}
+\newcommand{\downclues}{}
+% Save boxes appear to have some kind of defualt-global which causes
+% mutliple grids to break if the save box is not defined externally
+\newsavebox{\cwordgrid}
+
 % Crossword Environment
 % It takes two required parameters (width, height) of the grid
 % The optional solution flag determines whether the solution or empty grid
@@ -37,18 +49,18 @@
 	\newcommand{\cwordwidth}{#2}%
 	\newcommand{\cwordheight}{#3}%
 	% Counter for the number of the current clue
-	\newcounter{clue}%
-	\newcounter{cwordletter}
-	% List placeolders
+	\setcounter{clue}{0}%
+	\setcounter{cwordletter}{0}%
+	% List placeholders 
 	%  - The across and down clue strings
 	%  - List of x,y co-ord of squares marked as starting a clue
-	\newcommand{\rootsquares}{}%
-	\newcommand{\acrossclues}{}%
-	\newcommand{\downclues}{}%
+	\renewcommand{\rootsquares}{}%
+	\renewcommand{\acrossclues}{}%
+	\renewcommand{\downclues}{}%
 	% Command variable for length of current answer
 	\newcommand{\cwordlen}{}%
 	% Create a drawing box for the grid
-	\newsavebox{\cwordgrid}%
+	\savebox{\cwordgrid}{}%
 	% Begin the grid drawing
 	\begin{lrbox}{\cwordgrid}%
 	\begin{tikzpicture}%
