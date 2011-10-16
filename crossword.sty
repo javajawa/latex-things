@@ -7,7 +7,6 @@
 
 \usepackage{etoolbox}
 \usepackage{tikz}
-\usepackage{multicol}
 \usepackage{xstring}
 
 % Counters are global, because that's how I can get it to work
@@ -18,9 +17,6 @@
 \newcommand{\rootsquares}{}
 \newcommand{\acrossclues}{}
 \newcommand{\downclues}{}
-% Save boxes appear to have some kind of defualt-global which causes
-% mutliple grids to break if the save box is not defined externally
-\newsavebox{\cwordgrid}
 
 % Crossword Environment
 % It takes two required parameters (width, height) of the grid
@@ -35,12 +31,14 @@
 % If the height / width values are not natural numbers, also panic somewhat.
 %
 % -- start of \begin{crossword}
-\newenvironment{crossword}[3][puzzle]{
+\newenvironment{crossword}[3][grid]{
 	% Puzzle / Solution mode
-	\renewcommand{\do}[1]{\listadd{\argslist}{##1}}
-	\docsvlist{#1}
-	\newbool{cwordsoln}
-	\ifinlist{solution}{\argslist}{\booltrue{cwordsoln}}{\boolfalse{cwordsoln}}
+	\renewcommand{\do}[1]{\listadd{\argslist}{##1}}%
+	\docsvlist{#1}%
+	\newbool{cwordsoln}%
+	\newbool{cwordclue}%
+	\ifinlist{solution}{\argslist}{\booltrue{cwordsoln}}{\boolfalse{cwordsoln}}%
+	\ifinlist{clues}{\argslist}{\booltrue{cwordclue}}{\boolfalse{cwordclue}}%
 	%
 	\newcommand{\cwordwidth}{#2}%
 	\newcommand{\cwordheight}{#3}%
@@ -55,37 +53,31 @@
 	\renewcommand{\downclues}{}%
 	% Command variable for length of current answer
 	\newcommand{\cwordlen}{}%
-	% Create a drawing box for the grid
-	\savebox{\cwordgrid}{}%
-	% Begin the grid drawing
-	\begin{lrbox}{\cwordgrid}%
-	\begin{tikzpicture}%
-		\draw[fill=black] (0, 0) rectangle (\cwordwidth, \cwordheight);%
+	% Are we doing something that requires a grid?
+	\ifbool{cwordclue}{}{%
+		% Create a drawing box for the grid
+		% Begin the grid drawing
+		\begin{tikzpicture}%
+			\draw[fill=black] (0, 0) rectangle (\cwordwidth, \cwordheight);%
+	}%
 }
 % -- end of \begin{crossword}
 %
 % -- start of \end{crossword}
 {
-	\end{tikzpicture}
-	\end{lrbox}
+	% Close the grid, if we're drawing one.
+	\ifbool{cwordclue}{
+		\renewcommand{\do}[1]{##1 \\ }%
+		\begin{flushleft}
+			\textbf{Across} \\
+			\dolistloop{\acrossclues}
 
-	\begin{center}
-		\resizebox{0.95\columnwidth}{!}{\usebox{\cwordgrid}}
-		\ifbool{cwordsoln}{}{%
-			\renewcommand{\do}[1]{##1 \\ }%
-
-			\begin{multicols}{2}
-				\begin{flushleft}
-				\textbf{Across} \\
-				\dolistloop{\acrossclues}
-
-				\columnbreak
-				\textbf{Down} \\
-				\dolistloop{\downclues}
-				\end{flushleft}
-			\end{multicols}
-		}%
-	\end{center}
+			\textbf{Down} \\
+			\dolistloop{\downclues}
+		\end{flushleft}
+	}{%
+		\end{tikzpicture}
+	}%
 }
 
 % The cwordclue command
@@ -109,13 +101,15 @@
 
 	\ifnumequal{#3}{0}{
 		\listxadd{\acrossclues}{\arabic{clue}. #5 (\cwordlen)}
-		\cwordwhitea{#1}{#2}{\cwordlen}{#4}{\cwordlen}
+		\ifbool{cwordclue}{}{\cwordwhitea{#1}{#2}{\cwordlen}{#4}}
 	}{
 		\listxadd{\downclues}{\arabic{clue}. #5 (\cwordlen)}
-		\cwordwhited{#1}{#2}{\cwordlen}{#4}
+		\ifbool{cwordclue}{}{\cwordwhited{#1}{#2}{\cwordlen}{#4}}
 	}
 	\ifbool{cwordsoln}{}{
-		\draw (#1-1-0.05, \cwordheight+1-#2-0.2) node[right,font=\small] {\arabic{clue}};
+		\ifbool{cwordclue}{}{
+			\draw (#1-1-0.05, \cwordheight+1-#2-0.2) node[right,font=\small] {\arabic{clue}};
+		}
 	}
 }
 
