@@ -117,7 +117,7 @@
 	\addtocounter{cwordletter}{1}
 	\draw[fill=white] (#1-1, \cwordheight-#2) rectangle (#1, \cwordheight-#2+1);
 	\ifbool{cwordsoln}{
-		\draw (#1-1+0.5, \cwordheight-#2+0.5) node[font=\large] {\StrChar{#4}{\value{cwordletter}}};
+		\draw (#1-1+0.5, \cwordheight-#2+0.5) node[font=\Large\bfseries\sffamily] {\StrChar{#4}{\value{cwordletter}}};
 	}{%
 	}%
 	\ifnumequal{#3}{1}{
@@ -131,7 +131,7 @@
 	\addtocounter{cwordletter}{1}
 	\draw[fill=white] (#1-1, \cwordheight-#2) rectangle (#1, \cwordheight-#2+1);
 	\ifbool{cwordsoln}{	
-		\draw (#1-1+0.5, \cwordheight-#2+0.5) node[font=\large] {\StrChar{#4}{\value{cwordletter}}};
+		\draw (#1-1+0.5, \cwordheight-#2+0.5) node[font=\Large\bfseries\sffamily] {\StrChar{#4}{\value{cwordletter}}};
 	}{%
 	}%
 	\ifnumequal{#3}{1}{
