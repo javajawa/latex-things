@@ -82,33 +82,36 @@
 
 % The cwordclue command
 % Parameters:
-% - x-location (from left to right)
 % - y-location (from top to bottom)
+% - x-location (from left to right)
 % - direction - 0 is across, 1 is down
 % - answer
 % - clue
+%
+% Position is y,x as this is allows you to perform a sort operation on the
+% input data to get it in the correct order for clue numbering
 %
 % TODO: Throw error is not used in crossword environment
 \newcommand{\cwordclue}[5]{
 	\StrLen{#4}[\cwordlen]
 
-	\xifinlist{#1*\cwordwidth+#2}{\rootsquares}{
+	\xifinlist{#2*\cwordwidth+#1}{\rootsquares}{
 		% Do anything here?
 	}{
 		\addtocounter{clue}{1}%
-		\listxadd{\rootsquares}{#1*\cwordwidth+#2}
+		\listxadd{\rootsquares}{#2*\cwordwidth+#1}
 	}
 
 	\ifnumequal{#3}{0}{
 		\listxadd{\acrossclues}{\arabic{clue}. #5 (\cwordlen)}
-		\ifbool{cwordclue}{}{\cwordwhitea{#1}{#2}{\cwordlen}{#4}}
+		\ifbool{cwordclue}{}{\cwordwhitea{#2}{#1}{\cwordlen}{#4}}
 	}{
 		\listxadd{\downclues}{\arabic{clue}. #5 (\cwordlen)}
-		\ifbool{cwordclue}{}{\cwordwhited{#1}{#2}{\cwordlen}{#4}}
+		\ifbool{cwordclue}{}{\cwordwhited{#2}{#1}{\cwordlen}{#4}}
 	}
 	\ifbool{cwordsoln}{}{
 		\ifbool{cwordclue}{}{
-			\draw (#1-1-0.05, \cwordheight+1-#2-0.2) node[right,font=\small] {\arabic{clue}};
+			\draw (#2-1-0.05, \cwordheight+1-#1-0.2) node[right,font=\small] {\arabic{clue}};
 		}
 	}
 }
