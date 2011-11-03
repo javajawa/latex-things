@@ -1,0 +1,116 @@
+%
+% ARTICLE : A4 : 12pt : SINGLE COLUMN
+%
+% I hereby release the contents of this file into the public domain,
+% releasing all rights to the work,  without any expressed or implied 
+% warranty (including, but not limited to the implied warranty of 
+% merchantability and fitness for any purpose).
+%
+% This template is not designed to be overly compact, but instead to put
+% the page space to good use whilst maintaining legibility.
+% In this vein, the template includes a table of contents (starting on
+% the first page), a glossary, and a bibliography.
+% The setup is designed that the same visual result will be obtained
+% regardless of the process used to generate the final document (generally
+% a PDF), so PDF headers are set via hyperref. This is also used for the
+% internal links, which are typeset in a custom colour (here, a very deep
+% blue, chosen to degrade to look the same as black in grey-scale).
+%
+% Common customisations:
+%   - And an abstract on the title page, and \clearpage before the TOC
+%   - Have black links
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{lipsum} % TODO: Remove this
+
+% Input encoding and page size
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper,top=1.8cm,left=1.4cm,right=1.4cm,bottom=2cm]{geometry}
+
+% L10n and colo{u}r names
+\usepackage[usenames]{color}
+\usepackage[british]{babel} % TODO: Your Language Here
+\usepackage[fixlanguage]{babelbib}
+
+% Floats
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{subfig}
+\usepackage{wrapfig}
+
+% Mathematics
+\usepackage{amsmath}
+\usepackage{array}
+
+% Internal links, and proper PDF headers
+\usepackage[hyperindex,breaklinks]{hyperref}
+
+% Glossary
+\usepackage[toc]{glossaries} % Remove TOC if you don't want a contents
+% for the glossary.
+
+% Custom Colors
+\definecolor{linkblue}{RGB}{0,0,64} % Custom colour for links in hyperref
+
+% Paragraph layout
+\setlength{\parskip}{3mm plus1mm minus1mm}
+\setlength{\parindent}{1cm}
+\renewcommand{\baselinestretch}{1.3}
+
+% Page Layout
+% I'm not a fan of complex headers & footers...
+\pagestyle{plain}
+
+% Bibliography Set-up
+\selectbiblanguage{british} % TODO: Your Language Here
+\bibliographystyle{ieeetr} % numeric, order by when cited
+\newcommand{\bibfile}{} % TODO: Your bibliography Files here, comma separated
+
+% Glossary Setup
+\makeglossaries
+% TODO: Add glossary entries (maybe \input a glossary file?)
+
+% File parameters
+\title{TODO: Title}
+\author{TODO: Author}
+
+% Hyperlinks Setup
+\hypersetup{
+  unicode=true,           % non-Latin characters in bookmarks
+  colorlinks=true,        % false: boxed links; true: colored links
+  linkcolor=linkblue,     % color of internal links
+  citecolor=black,        % color of links to bibliography
+  filecolor=linkblue,     % color of file links
+  urlcolor=blue,          % color of external links
+}
+
+% PDF Tag setup
+\hypersetup{
+  pdftitle={TODO},
+  pdfauthor={TODO},
+  pdfsubject={TODO},
+  pdfcreator={TODO},
+  pdfproducer={TODO},
+  pdfkeywords={TODO}{TODO}{TODO},
+}
+
+\begin{document}
+
+	\maketitle
+	
+	% TODO: You might want to add and abstract here.
+
+	\tableofcontents
+
+	\clearpage
+
+	% TODO: Put content here
+	\lipsum
+
+	\clearpage
+	\printglossaries
+	\addcontentsline{toc}{section}{Bibliography}
+	\nocite{*} % TODO: Remove when you've cited something
+	\bibliography{\bibfile}
+\end{document}
+
