@@ -1,0 +1,22 @@
+\documentclass[12pt]{beamer}
+
+\usepackage{ifdraft}
+
+\ifdraft{\usepackage{showframe}}{}
+
+\usepackage{lipsum}
+
+\title{Notes / Slides Example}
+\author{Benedict Harcourt}
+
+\begin{document}
+	\begin{frame}
+		\maketitle
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Lorem Ipsum}
+
+		\lipsum{1}
+	\end{frame}
+\end{document}
