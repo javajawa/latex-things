@@ -1,0 +1,17 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{ifdraft}
+
+\ifdraft{\usepackage{showframe}}{}
+
+\usepackage{lipsum}
+
+\title{AutoDraft Example}
+\author{Benedict Harcourt}
+
+\begin{document}
+
+	\maketitle
+
+	\lipsum
+\end{document}
