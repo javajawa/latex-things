@@ -3,6 +3,13 @@
 
 all : example.pdf
 
+clean :
+	-rm -f example.pdf
+	-rm -f example-draft.*
+	-rm -f example.aux
+	-rm -f example.log
+	-rm -f exmaple.toc
+
 live :
 	-rm -f example.pdf
 	$(MAKE) all
