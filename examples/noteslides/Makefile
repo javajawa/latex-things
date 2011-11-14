@@ -21,5 +21,5 @@ clean :
 	./latexpp $< $@
 
 %-notes.latex : %.latex
-	./latexpp $< $@ handouts
+	./latexpp $< $@ handout
 
