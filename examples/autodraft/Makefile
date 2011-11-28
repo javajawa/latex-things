@@ -1,7 +1,11 @@
-.PHONY: draft all clean
+TARGETS=example.pdf
+DRAFTS=$(TARGETS:.pdf=-draft.pdf)
+
+.PHONY: drafts all clean
 .DEFAULT: all
 
-all : example.pdf
+all : $(TARGETS)
+drafts : $(DRAFTS)
 
 clean :
 	-rm -f example.pdf
@@ -13,9 +17,6 @@ clean :
 live :
 	-rm -f example.pdf
 	$(MAKE) all
-
-draft: example-draft.dvi
-	dvipdf example-draft.dvi example.pdf
 
 %.pdf : %.dvi
 	dvipdf $< $@
