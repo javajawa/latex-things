@@ -18,15 +18,22 @@ SVGS=$(wildcard **/*.svg)
 # Images that will be used by latex - .eps extensions
 IMGS=$(wildcard **/*.eps) $(PNGS:.png=.eps) $(JPGS:.jpg=.eps) $(SVGS:.svg=.eps)
 
+DRAFTS=$(TARGETS:.pdf=-draft.pdf)
+
 .SUFFIXES:
 .DEFAULT: all
-.PHONY: all clean log-clean
+.PHONY: all drafts clean log-clean
 
 all : $(TARGETS)
 
+drafts : $(DRAFTS)
+
+# Render PDF from DVI
 %.pdf : %.dvi
 	dvipdf $< $@
 
+# Main latex calls
+# Trailing touch such that .dvi has later mtime than .aux
 %.dvi : %.latex %.aux %.toc %.bbl %.gls $(IMGS)
 	latex $<
 	latex $<
@@ -34,6 +41,10 @@ all : $(TARGETS)
 
 %.aux : %.latex $(SRCS) $(IMGS)
 	latex $<
+
+# Draft mode
+%-draft.latex : %.latex
+	./latexpp $< $@ draft
 
 # Table of contents
 %.toc : %.latex %.aux %.bbl %.gls $(IMGS)
@@ -66,18 +77,19 @@ all : $(TARGETS)
 	convert $< $@
 
 clean: log-clean
-	-rm -f $(TARGET:.pdf=.pdf)
-	-rm -f $(TARGET:.pdf=.aux)
-	-rm -f $(TARGET:.pdf=.bbl)
-	-rm -f $(TARGET:.pdf=.dvi)
-	-rm -f $(TARGET:.pdf=.ist)
-	-rm -f $(TARGET:.pdf=.glo)
-	-rm -f $(TARGET:.pdf=.gls)
-	-rm -f $(TARGET:.pdf=.toc)
-	-rm -f $(TARGET:.pdf=.out)
+	-rm -f $(wildcard *-draft.*)
+	-rm -f $(TARGETS:.pdf=.pdf)
+	-rm -f $(TARGETS:.pdf=.aux)
+	-rm -f $(TARGETS:.pdf=.bbl)
+	-rm -f $(TARGETS:.pdf=.dvi)
+	-rm -f $(TARGETS:.pdf=.ist)
+	-rm -f $(TARGETS:.pdf=.glo)
+	-rm -f $(TARGETS:.pdf=.gls)
+	-rm -f $(TARGETS:.pdf=.toc)
+	-rm -f $(TARGETS:.pdf=.out)
 
 log-clean:
-	-rm -f $(TARGET:.pdf=.blg)
-	-rm -f $(TARGET:.pdf=.ilg)
-	-rm -f $(TARGET:.pdf=.log)
+	-rm -f $(TARGETS:.pdf=.blg)
+	-rm -f $(TARGETS:.pdf=.ilg)
+	-rm -f $(TARGETS:.pdf=.log)
 	
