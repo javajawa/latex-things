@@ -64,7 +64,7 @@
 % Bibliography Set-up
 \selectbiblanguage{british} % TODO: Your Language Here
 \bibliographystyle{ieeetr} % numeric, order by when cited
-\newcommand{\bibfile}{} % TODO: Your bibliography Files here, comma separated
+\newcommand{\bibfile}{example} % TODO: Your bibliography Files here, comma separated
 
 % Glossary Setup
 \makeglossaries

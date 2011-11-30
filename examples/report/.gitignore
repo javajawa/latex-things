@@ -1,0 +1,13 @@
+*.aux
+*.bbl
+*.blg
+*.dvi
+*.ilg
+*.ist
+*.glo
+*.gls
+*.log
+*.pdf
+*.out
+*.toc
+
