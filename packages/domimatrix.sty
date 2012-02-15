@@ -1,0 +1,46 @@
+\ProvidesPackage{domimatrix}
+
+% Crossword package
+% Copyright 2011 Benedict Harcourt
+% License Pending
+% Contact: ben.harcourt@harcourtprogramming.co.uk
+
+\usepackage{etoolbox}
+\usepackage{etextools}
+
+% Write the letter c the number of times speicified
+% I suspect there's a better way to do this...
+\newcommand{\makecolumn}[1]{\ifnumequal{#1}{0}{}{c\makecolumn{#1-1}}}
+
+% Prints out a cell separator and a cell value
+%
+% Value after separator to stop a trailing line break which will cause
+% the matrix to have an extra row. This means that there is a special
+% case (cellcount == 0) for the first cell, where no separator is used.
+\newcommand{\makecell}[1]
+{
+	\ifnumequal{\value{matrixcellcount}}{0}{
+		\setcounter{matrixcellcount}{1}
+	}{
+		\ifnumequal{\value{matrixcellcount}}{\value{matrixwidth}}
+			{ \\ \setcounter{matrixcellcount}{1}}
+			{ & \addtocounter{matrixcellcount}{1} }
+	}
+	#1
+}
+
+\newcounter{matrixwidth} % Cells per line
+\newcounter{matrixcellcount} % Cells printed in current line
+
+\newcommand{\domimatrix}[2]{
+	\ensuremath{
+		\left(
+		\begin{array}{\makecolumn{#1}}
+			\setcounter{matrixwidth}{#1}
+			\setcounter{matrixcellcount}{0}
+			\csvloop[\makecell]{#2} % Free CSV parsing from etextools :)
+		\end{array}
+		\right)
+	}
+}
+
