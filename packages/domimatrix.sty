@@ -35,7 +35,7 @@
 \newcommand{\domimatrix}[2]{
 	\ensuremath{
 		\left(
-		\begin{array}{\makecolumn{#1}}
+		\begin{array}{\dmmakecolumn{#1}}
 			\setcounter{dmwidth}{#1}
 			\setcounter{dmcellcount}{0}
 			\csvloop[\dmmakecell]{#2} % Free CSV parsing from etextools :)
