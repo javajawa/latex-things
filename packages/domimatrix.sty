@@ -32,9 +32,12 @@
 \newcounter{dmwidth} % Cells per line
 \newcounter{dmcellcount} % Cells printed in current line
 
+\newcommand{\dmstretch}{1}
+
 \newcommand{\domimatrix}[2]{
 	\ensuremath{
 		\left(
+		\renewcommand{\arraystretch}{\dmstretch}
 		\begin{array}{\dmmakecolumn{#1}}
 			\setcounter{dmwidth}{#1}
 			\setcounter{dmcellcount}{0}
