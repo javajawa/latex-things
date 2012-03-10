@@ -8,7 +8,7 @@
 \usepackage{etoolbox}
 \usepackage{etextools}
 
-% Write the letter c the number of times speicified
+% Write the letter c the number of times specified
 % I suspect there's a better way to do this...
 \newcommand{\dmmakecolumn}[1]{\ifnumequal{#1}{0}{}{c\dmmakecolumn{#1-1}}}
 
@@ -43,4 +43,8 @@
 		\right)
 	}
 }
+
+\newcommand{\bra}[1]{\ensuremath{\left\langle#1\right|}}
+\newcommand{\ket}[1]{\ensuremath{\left|#1\right\rangle}}
+\newcommand{\inprod}[2]{\ensuremath{\left\langle#1|#2\right\rangle}}
 
