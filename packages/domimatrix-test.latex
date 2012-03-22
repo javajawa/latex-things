@@ -1,0 +1,36 @@
+\documentclass{article}
+
+\usepackage{domimatrix}
+
+\setlength{\parskip}{3mm}
+
+\begin{document}
+	\domimatrix{2}{a,b,c,d}
+
+	\domimatrix{4}{
+		1,
+		2,
+		2,
+		5
+	}
+
+	\domimatrix{1}{
+		1,2,
+		2,5
+	}
+
+	\domimatrix{1}{
+		{1,1},
+		2
+	}
+
+	$\tuple{a,b,c}_t$
+
+	\bra{x} = \domimatrix{4}{a,b,c,d}
+
+	\ket{x} = \domimatrix{1}{a,b,c,d}
+
+	$\inprod{x}{x} = a^2 + b^2 + c^2 + d^2$
+
+	$P(X = x) = {n \choose r} p^r (1-p)^{n-r}$
+\end{document}
