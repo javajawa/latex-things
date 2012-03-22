@@ -14,7 +14,7 @@
 \newcounter{cwordletter}
 % These three lists have to be globals, as they are written to by
 % commands of a lower scope (the \cwordclue command, to be precise)
-\newcommand{\rootsquares}{}
+\newcommand{\cwordlastpos}{}
 \newcommand{\acrossclues}{}
 \newcommand{\downclues}{}
 
@@ -48,7 +48,7 @@
 	% List placeholders 
 	%  - The across and down clue strings
 	%  - List of x,y co-ord of squares marked as starting a clue
-	\renewcommand{\rootsquares}{}%
+	\numgdef{\cwordlastpos}{}%
 	\renewcommand{\acrossclues}{}%
 	\renewcommand{\downclues}{}%
 	% Command variable for length of current answer
@@ -94,20 +94,27 @@
 % TODO: Throw error is not used in crossword environment
 \newcommand{\cwordclue}[5]{
 	\StrLen{#4}[\cwordlen]
-
-	\xifinlist{#2*\cwordwidth+#1}{\rootsquares}{
+	%
+	\ifnumequal{#2*\cwordheight+#1}{\cwordlastpos}}%
+	{%
 		% Do anything here?
-	}{
+	}{%
 		\addtocounter{clue}{1}%
-		\listxadd{\rootsquares}{#2*\cwordwidth+#1}
-	}
-
+		\numgdef{\cwordlastpos}{#2*\cwordwidth+#1}%
+	}%
+	%
 	\ifnumequal{#3}{0}{
-		\listxadd{\acrossclues}{\arabic{clue}. #5 (\cwordlen)}
-		\ifbool{cwordclue}{}{\cwordwhitea{#2}{#1}{\cwordlen}{#4}}
-	}{
-		\listxadd{\downclues}{\arabic{clue}. #5 (\cwordlen)}
-		\ifbool{cwordclue}{}{\cwordwhited{#2}{#1}{\cwordlen}{#4}}
+		\ifbool{cwordclue}{%
+			\listxadd{\acrossclues}{\arabic{clue}. #5 (\cwordlen)}%
+		}{%
+			\cwordwhitea{#2}{#1}{\cwordlen}{#4}
+		}%
+	}{%
+		\ifbool{cwordclue}{%
+			\listxadd{\downclues}{\arabic{clue}. #5 (\cwordlen)}%
+		}{%
+			\cwordwhited{#2}{#1}{\cwordlen}{#4}%
+		}%
 	}
 	\ifbool{cwordsoln}{}{
 		\ifbool{cwordclue}{}{
