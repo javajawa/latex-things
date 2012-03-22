@@ -68,13 +68,14 @@
 	% Close the grid, if we're drawing one.
 	\ifbool{cwordclue}{
 		\renewcommand{\do}[1]{##1 \\ }%
-		\begin{flushleft}
+		{\raggedright
 			\textbf{Across} \\
 			\dolistloop{\acrossclues}
 
+			\vspace{0.3\baselineskip}
 			\textbf{Down} \\
 			\dolistloop{\downclues}
-		\end{flushleft}
+		}
 	}{%
 		\end{tikzpicture}
 	}%
